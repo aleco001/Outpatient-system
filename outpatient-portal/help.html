@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient Portal - Help & Support</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Help-specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #0d4d8c;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0d4d8c;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-dropdown i {
+            font-size: 32px;
+            color: #0d4d8c;
+            cursor: pointer;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 30px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style-type: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+        }
+        
+        .sidebar-menu li.active a {
+            background-color: #e6f2ff;
+            color: #0d4d8c;
+            border-right: 4px solid #0d4d8c;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a6fc4, #0d4d8c);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .help-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .help-card i {
+            font-size: 40px;
+            color: #0d4d8c;
+            margin-bottom: 20px;
+        }
+        
+        .help-card h3 {
+            color: #0d4d8c;
+            margin-bottom: 15px;
+        }
+        
+        .help-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .faq-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h3 {
+            color: #0d4d8c;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .faq-item {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .faq-item.active {
+            border-color: #d0e4ff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question h4 {
+            margin: 0;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .faq-question i {
+            color: #0d4d8c;
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .faq-answer ul {
+            margin-left: 20px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .faq-answer li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .contact-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .contact-card {
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .contact-card i {
+            font-size: 36px;
+            color: #0d4d8c;
+            margin-bottom: 15px;
+        }
+        
+        .contact-card h4 {
+            color: #0d4d8c;
+            margin-bottom: 10px;
+        }
+        
+        .contact-card p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .contact-link {
+            display: inline-block;
+            background-color: #0d4d8c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-link:hover {
+            background-color: #1a6fc4;
+        }
+        
+        .btn-primary {
+            background-color: #0d4d8c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a6fc4;
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            
+            .sidebar-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .sidebar-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+            }
+            
+            .sidebar-menu li.active a {
+                border-right: none;
+                border-bottom: 4px solid #0d4d8c;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <div class="nav-user">
+                <div class="user-info">
+                    <span id="userGreeting">Hello, Patient</span>
+                    <div class="user-dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-content">
+                            <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="appointments.html"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="records.html"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="prescriptions.html"><i class="fas fa-prescription"></i> Prescriptions</a></li>
+                <li><a href="messages.html"><i class="fas fa-comment-medical"></i> Messages</a></li>
+                <li><a href="billing.html"><i class="fas fa-file-invoice-dollar"></i> Billing</a></li>
+                <li class="active"><a href="help.html"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="welcome-banner">
+                <h2>Help & Support</h2>
+                <p>Get assistance, find answers, and access support resources</p>
+            </div>
+            
+            <div class="help-grid">
+                <a href="#faq" class="help-card">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Frequently Asked Questions</h3>
+                    <p>Find answers to common questions about using the patient portal, appointments, prescriptions, and billing.</p>
+                </a>
+                
+                <a href="#contact" class="help-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>Contact Support</h3>
+                    <p>Get in touch with our support team for technical issues, account problems, or general inquiries.</p>
+                </a>
+                
+                <a href="#" class="help-card" id="userGuideBtn">
+                    <i class="fas fa-book"></i>
+                    <h3>User Guide & Tutorials</h3>
+                    <p>Access step-by-step guides and video tutorials to help you make the most of the patient portal.</p>
+                </a>
+                
+                <a href="#" class="help-card" id="feedbackBtn">
+                    <i class="fas fa-comment-alt"></i>
+                    <h3>Feedback & Suggestions</h3>
+                    <p>Share your feedback and suggestions to help us improve the patient portal experience.</p>
+                </a>
+                
+                <a href="#" class="help-card" id="privacyBtn">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Privacy & Security</h3>
+                    <p>Learn about our privacy policies, security measures, and how we protect your health information.</p>
+                </a>
+                
+                <a href="#" class="help-card" id="emergencyBtn">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Emergency Information</h3>
+                    <p>Important emergency contact information and what to do in case of a medical emergency.</p>
+                </a>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section" id="faq">
+                <div class="section-header">
+                    <h3><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+                </div>
+                
+                <div class="faq-list" id="faqList">
+                    <!-- FAQ items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Contact Section -->
+            <div class="contact-section" id="contact">
+                <div class="section-header">
+                    <h3><i class="fas fa-headset"></i> Contact Support</h3>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fas fa-phone-alt"></i>
+                        <h4>Phone Support</h4>
+                        <p>Call our support team for immediate assistance with technical issues or urgent matters.</p>
+                        <a href="tel:1-800-MEDICARE" class="contact-link">
+                            <i class="fas fa-phone"></i> 1-800-MEDICARE
+                        </a>
+                        <p style="margin-top: 10px; font-size: 14px;">Mon-Fri: 8:00 AM - 8:00 PM EST</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email Support</h4>
+                        <p>Send us an email for non-urgent inquiries, feedback, or general questions.</p>
+                        <a href="mailto:support@medicare.example.com" class="contact-link">
+                            <i class="fas fa-envelope"></i> Email Support
+                        </a>
+                        <p style="margin-top: 10px; font-size: 14px;">Response within 24-48 hours</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <i class="fas fa-comments"></i>
+                        <h4>Live Chat</h4>
+                        <p>Chat with a support representative in real-time for quick questions and assistance.</p>
+                        <button class="contact-link" id="liveChatBtn" style="border: none; font-family: inherit; cursor: pointer;">
+                            <i class="fas fa-comment"></i> Start Live Chat
+                        </button>
+                        <p style="margin-top: 10px; font-size: 14px;">Available during business hours</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>In-Person Support</h4>
+                        <p>Visit our patient support center at the hospital for in-person assistance.</p>
+                        <button class="contact-link" id="visitBtn" style="border: none; font-family: inherit; cursor: pointer;">
+                            <i class="fas fa-directions"></i> Get Directions
+                        </button>
+                        <p style="margin-top: 10px; font-size: 14px;">Main Hospital Lobby</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; <span id="currentYear"></span> MediCare Outpatient Portal. All rights reserved.</p>
+            <p>For medical emergencies, call 911 immediately.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // FAQ Data
+        const faqs = [
+            {
+                question: "How do I reset my password?",
+                answer: "To reset your password, click on the 'Forgot password?' link on the login page. You will be prompted to enter your email address, and we will send you a password reset link. If you don't receive the email within 10 minutes, please check your spam folder or contact support."
+            },
+            {
+                question: "How can I schedule a new appointment?",
+                answer: "You can schedule a new appointment by:<ol><li>Going to the Appointments page</li><li>Clicking the 'Schedule New Appointment' button</li><li>Selecting the type of appointment, preferred doctor, date, and time</li><li>Providing any relevant details about your visit</li><li>Submitting the request</li></ol>You will receive a confirmation once your appointment is scheduled."
+            },
+            {
+                question: "How do I access my medical records?",
+                answer: "Your medical records are available in the Medical Records section of the portal. You can:<ul><li>View recent test results and clinical notes</li><li>Download records as PDF files</li><li>See your health summary including conditions, medications, and allergies</li><li>Access imaging and lab reports</li></ul>If you need records from before you joined the portal, please contact medical records department."
+            },
+            {
+                question: "Can I request prescription refills online?",
+                answer: "Yes, you can request prescription refills online through the Prescriptions section. Simply:<ol><li>Go to the Prescriptions page</li><li>Find the medication you need refilled</li><li>Click the 'Request Refill' button</li><li>Select your preferred pharmacy</li><li>Submit the request</li></ol>Most refill requests are processed within 24-48 hours. You will be notified when your prescription is ready for pickup."
+            },
+            {
+                question: "How do I pay my medical bills online?",
+                answer: "To pay your medical bills online:<ol><li>Navigate to the Billing section</li><li>View your current balance and recent statements</li><li>Click 'Pay Now' to make a payment</li><li>Enter your payment information or select a saved payment method</li><li>Review and submit your payment</li></ol>You will receive a confirmation email with your payment receipt. Payment history is available in the Billing section."
+            },
+            {
+                question: "Is my health information secure?",
+                answer: "Yes, we take your privacy and security very seriously. Our patient portal uses:<ul><li>Bank-level 256-bit encryption for all data transmission</li><li>Secure login with multi-factor authentication option</li><li>HIPAA-compliant storage and handling of medical information</li><li>Regular security audits and updates</li><li>Strict access controls - only authorized medical staff can view your records</li></ul>We never share your health information without your explicit consent, except as required by law."
+            },
+            {
+                question: "How do I update my personal information?",
+                answer: "You can update your personal information in the My Profile section. You can edit:<ul><li>Contact information (phone, email, address)</li><li>Emergency contacts</li><li>Insurance information</li><li>Communication preferences</li></ul>Some information like your legal name and date of birth may require verification with our staff. For immediate updates to critical information, please contact our registration department."
+            },
+            {
+                question: "What should I do if I'm having technical issues?",
+                answer: "If you're experiencing technical issues:<ol><li>Try clearing your browser cache and cookies</li><li>Make sure you're using a supported browser (Chrome, Firefox, Safari, Edge)</li><li>Disable any browser extensions that might interfere</li><li>Try accessing the portal from a different device or network</li><li>If problems persist, contact our technical support team at 1-800-MEDICARE or support@medicare.example.com</li></ol>Please provide details about the issue and any error messages you see."
+            }
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // For demo purposes, if no user is logged in, show a demo user
+            if (!isLoggedIn || isLoggedIn !== 'true' || !currentUser.id) {
+                document.getElementById('userGreeting').textContent = 'Hello, Guest';
+            } else {
+                document.getElementById('userGreeting').textContent = `Hello, ${currentUser.firstName}`;
+            }
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+            
+            // Load FAQs
+            loadFAQs();
+            
+            // FAQ toggle functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.faq-question')) {
+                    const faqItem = e.target.closest('.faq-item');
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    // Close all FAQ items
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Open clicked item if it wasn't already active
+                    if (!isActive) {
+                        faqItem.classList.add('active');
+                    }
+                }
+            });
+            
+            // Help card click handlers
+            document.getElementById('userGuideBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Opening user guide. In a full implementation, this would open a comprehensive user guide with tutorials and instructions.');
+            });
+            
+            document.getElementById('feedbackBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const feedback = prompt('Please share your feedback or suggestions:');
+                if (feedback) {
+                    alert('Thank you for your feedback! We appreciate your input and will use it to improve our services.');
+                }
+            });
+            
+            document.getElementById('privacyBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Opening privacy and security information. In a full implementation, this would show detailed information about our privacy policies, security measures, and your rights regarding your health information.');
+            });
+            
+            document.getElementById('emergencyBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('EMERGENCY INFORMATION\n\nFor life-threatening emergencies:\n• Call 911 immediately\n• Go to the nearest emergency room\n\nHospital Emergency Department:\n123 Medical Center Drive, Anytown\n(555) 987-6543\n\nPoison Control: 1-800-222-1222\n\nAfter-hours urgent care available at our facility until 10:00 PM.');
+            });
+            
+            // Contact button handlers
+            document.getElementById('liveChatBtn').addEventListener('click', function() {
+                alert('Starting live chat. In a full implementation, this would open a chat window with a support representative.');
+            });
+            
+            document.getElementById('visitBtn').addEventListener('click', function() {
+                alert('Patient Support Center Location:\n\nMediCare Hospital\n123 Medical Center Drive\nAnytown, CA 12345\n\nHours: Monday-Friday, 8:00 AM - 5:00 PM\n\nParking: Visitor parking is available in Lot A. Free valet parking is available at the main entrance.');
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') !== '#') {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Sidebar navigation
+            setupSidebarNavigation();
+        });
+        
+        function loadFAQs() {
+            const faqList = document.getElementById('faqList');
+            
+            faqList.innerHTML = faqs.map((faq, index) => `
+                <div class="faq-item ${index === 0 ? 'active' : ''}">
+                    <div class="faq-question">
+                        <h4>${faq.question}</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer" style="${index === 0 ? 'max-height: 500px; padding: 20px;' : ''}">
+                        ${faq.answer}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function setupSidebarNavigation() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => {
+                        l.parentElement.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.parentElement.classList.add('active');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

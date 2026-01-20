@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient Portal - Billing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Billing-specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #0d4d8c;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0d4d8c;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-dropdown i {
+            font-size: 32px;
+            color: #0d4d8c;
+            cursor: pointer;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 30px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style-type: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+        }
+        
+        .sidebar-menu li.active a {
+            background-color: #e6f2ff;
+            color: #0d4d8c;
+            border-right: 4px solid #0d4d8c;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a6fc4, #0d4d8c);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .billing-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-card h3 {
+            color: #0d4d8c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .amount {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .amount.paid {
+            color: #2e7d32;
+        }
+        
+        .amount.pending {
+            color: #ef6c00;
+        }
+        
+        .amount.overdue {
+            color: #d32f2f;
+        }
+        
+        .summary-card p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .billing-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h3 {
+            color: #0d4d8c;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #0d4d8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a6fc4;
+        }
+        
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .billing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .billing-table th {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+            font-weight: 600;
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .billing-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+        
+        .billing-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-paid {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-overdue {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .status-insurance {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        .insurance-info {
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .insurance-info h4 {
+            color: #0d4d8c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insurance-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-item label {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .detail-item .value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .payment-methods {
+            margin-top: 30px;
+        }
+        
+        .method-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .method-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .method-info p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .method-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #0d4d8c;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #0d4d8c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 77, 140, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            
+            .sidebar-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .sidebar-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+            }
+            
+            .sidebar-menu li.active a {
+                border-right: none;
+                border-bottom: 4px solid #0d4d8c;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .billing-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .method-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .method-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .method-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <div class="nav-user">
+                <div class="user-info">
+                    <span id="userGreeting">Hello, Patient</span>
+                    <div class="user-dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-content">
+                            <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="appointments.html"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="records.html"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="prescriptions.html"><i class="fas fa-prescription"></i> Prescriptions</a></li>
+                <li><a href="messages.html"><i class="fas fa-comment-medical"></i> Messages</a></li>
+                <li class="active"><a href="billing.html"><i class="fas fa-file-invoice-dollar"></i> Billing</a></li>
+                <li><a href="help.html"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="welcome-banner">
+                <h2>Billing & Payments</h2>
+                <p>View statements, make payments, and manage your billing preferences</p>
+            </div>
+            
+            <div class="billing-summary">
+                <div class="summary-card">
+                    <h3><i class="fas fa-money-check-alt"></i> Current Balance</h3>
+                    <div class="amount pending">$245.50</div>
+                    <p>Amount due by February 15, 2024</p>
+                    <button class="btn-primary" id="payNowBtn">
+                        <i class="fas fa-credit-card"></i> Pay Now
+                    </button>
+                </div>
+                
+                <div class="summary-card">
+                    <h3><i class="fas fa-calendar-check"></i> Recent Payments</h3>
+                    <div class="amount paid">$150.00</div>
+                    <p>Last payment on January 5, 2024</p>
+                    <button class="btn-secondary" id="viewPaymentsBtn">
+                        <i class="fas fa-history"></i> View History
+                    </button>
+                </div>
+                
+                <div class="summary-card">
+                    <h3><i class="fas fa-shield-alt"></i> Insurance Coverage</h3>
+                    <div class="amount">90%</div>
+                    <p>MediCare Health Plans - Active</p>
+                    <button class="btn-secondary" id="viewInsuranceBtn">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Recent Statements -->
+            <div class="billing-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-file-invoice"></i> Recent Statements</h3>
+                    <button class="btn-secondary" id="viewAllStatementsBtn">
+                        <i class="fas fa-list"></i> View All Statements
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="billing-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Service</th>
+                                <th>Provider</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statementsTable">
+                            <!-- Statements will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Insurance Information -->
+            <div class="insurance-info">
+                <h4><i class="fas fa-shield-alt"></i> Insurance Information</h4>
+                <div class="insurance-details">
+                    <div class="detail-item">
+                        <label>Primary Insurance</label>
+                        <div class="value">MediCare Health Plans</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Member ID</label>
+                        <div class="value">MCP123456789</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Group Number</label>
+                        <div class="value">GRP987654</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Coverage</label>
+                        <div class="value">90% after deductible</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Deductible Met</label>
+                        <div class="value">$1,200 of $1,500</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Out-of-Pocket Max</label>
+                        <div class="value">$3,000 of $5,000</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="billing-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-credit-card"></i> Payment Methods</h3>
+                    <button class="btn-primary" id="addPaymentMethodBtn">
+                        <i class="fas fa-plus"></i> Add Payment Method
+                    </button>
+                </div>
+                
+                <div class="payment-methods" id="paymentMethodsList">
+                    <!-- Payment methods will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Make Payment Modal -->
+            <div class="modal" id="paymentModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Make a Payment</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="paymentForm">
+                            <div class="form-group">
+                                <label for="paymentAmount">Payment Amount *</label>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 20px; margin-right: 10px;">$</span>
+                                    <input type="number" id="paymentAmount" class="form-control" value="245.50" min="1" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paymentMethod">Payment Method *</label>
+                                <select id="paymentMethod" class="form-control" required>
+                                    <option value="">Select payment method</option>
+                                    <option value="visa-1234" selected>Visa ending in 1234</option>
+                                    <option value="bank">Bank Account (ACH)</option>
+                                    <option value="new-card">New Credit/Debit Card</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paymentDate">Payment Date</label>
+                                <select id="paymentDate" class="form-control">
+                                    <option value="today">Today</option>
+                                    <option value="next-week">Next Week</option>
+                                    <option value="specific">Specific Date</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paymentNotes">Payment Notes (Optional)</label>
+                                <textarea id="paymentNotes" class="form-control" rows="2" placeholder="Add any notes for this payment..."></textarea>
+                            </div>
+                            
+                            <div class="payment-summary" style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                                <h4 style="margin: 0 0 10px 0; color: #333;">Payment Summary</h4>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span>Payment Amount:</span>
+                                    <span id="summaryAmount">$245.50</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span>Processing Fee:</span>
+                                    <span id="summaryFee">$0.00</span>
+                                </div>
+                                <hr style="margin: 10px 0; border: none; border-top: 1px solid #ddd;">
+                                <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                                    <span>Total:</span>
+                                    <span id="summaryTotal">$245.50</span>
+                                </div>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="button" class="btn-secondary modal-close">Cancel</button>
+                                <button type="submit" class="btn-primary">Submit Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Payment Method Modal -->
+            <div class="modal" id="addPaymentMethodModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Add Payment Method</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addPaymentMethodForm">
+                            <div class="form-group">
+                                <label>Payment Method Type *</label>
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <label style="flex: 1; text-align: center;">
+                                        <input type="radio" name="paymentType" value="credit-card" checked>
+                                        <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                                            <i class="fas fa-credit-card" style="font-size: 24px; margin-bottom: 10px; color: #0d4d8c;"></i>
+                                            <div>Credit/Debit Card</div>
+                                        </div>
+                                    </label>
+                                    <label style="flex: 1; text-align: center;">
+                                        <input type="radio" name="paymentType" value="bank">
+                                        <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                                            <i class="fas fa-university" style="font-size: 24px; margin-bottom: 10px; color: #0d4d8c;"></i>
+                                            <div>Bank Account</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div id="creditCardForm">
+                                <div class="form-group">
+                                    <label for="cardNumber">Card Number *</label>
+                                    <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cardExpiry">Expiry Date *</label>
+                                        <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardCVC">CVC *</label>
+                                        <input type="text" id="cardCVC" class="form-control" placeholder="123" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cardName">Name on Card *</label>
+                                    <input type="text" id="cardName" class="form-control" placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            
+                            <div id="bankAccountForm" style="display: none;">
+                                <div class="form-group">
+                                    <label for="accountNumber">Account Number *</label>
+                                    <input type="text" id="accountNumber" class="form-control" placeholder="000123456789" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="routingNumber">Routing Number *</label>
+                                    <input type="text" id="routingNumber" class="form-control" placeholder="123456789" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="accountType">Account Type *</label>
+                                    <select id="accountType" class="form-control" required>
+                                        <option value="">Select account type</option>
+                                        <option value="checking">Checking</option>
+                                        <option value="savings">Savings</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="saveAsDefault" checked>
+                                    Save as default payment method
+                                </label>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="button" class="btn-secondary modal-close">Cancel</button>
+                                <button type="submit" class="btn-primary">Add Payment Method</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; <span id="currentYear"></span> MediCare Outpatient Portal. All rights reserved.</p>
+            <p>For billing questions, call (555) 123-4567 or email billing@medicare.example.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Sample billing data
+        const statements = [
+            {
+                id: 1,
+                date: "2024-01-15",
+                service: "Annual Physical Exam",
+                provider: "Dr. Michael Johnson",
+                amount: 150.00,
+                status: "paid",
+                statementId: "INV-2024-001"
+            },
+            {
+                id: 2,
+                date: "2024-01-20",
+                service: "Lab Tests",
+                provider: "MediCare Laboratory",
+                amount: 85.50,
+                status: "pending",
+                statementId: "INV-2024-002"
+            },
+            {
+                id: 3,
+                date: "2024-01-25",
+                service: "Follow-up Consultation",
+                provider: "Dr. Sarah Smith",
+                amount: 110.00,
+                status: "pending",
+                statementId: "INV-2024-003"
+            },
+            {
+                id: 4,
+                date: "2023-12-20",
+                service: "Vaccination",
+                provider: "Immunization Clinic",
+                amount: 45.00,
+                status: "paid",
+                statementId: "INV-2023-045"
+            },
+            {
+                id: 5,
+                date: "2023-12-10",
+                service: "X-Ray Imaging",
+                provider: "Radiology Department",
+                amount: 225.00,
+                status: "insurance",
+                statementId: "INV-2023-044"
+            }
+        ];
+        
+        const paymentMethods = [
+            {
+                id: 1,
+                type: "credit-card",
+                name: "Visa ending in 1234",
+                details: "Expires 04/25",
+                isDefault: true
+            },
+            {
+                id: 2,
+                type: "bank",
+                name: "Checking Account",
+                details: "Bank of America ••••6789",
+                isDefault: false
+            }
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // For demo purposes, if no user is logged in, show a demo user
+            if (!isLoggedIn || isLoggedIn !== 'true' || !currentUser.id) {
+                document.getElementById('userGreeting').textContent = 'Hello, Guest';
+            } else {
+                document.getElementById('userGreeting').textContent = `Hello, ${currentUser.firstName}`;
+            }
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+            
+            // Load data
+            loadStatements();
+            loadPaymentMethods();
+            
+            // Modal functionality
+            const paymentModal = document.getElementById('paymentModal');
+            const addPaymentMethodModal = document.getElementById('addPaymentMethodModal');
+            const closeBtns = document.querySelectorAll('.modal-close');
+            const payNowBtn = document.getElementById('payNowBtn');
+            const addPaymentMethodBtn = document.getElementById('addPaymentMethodBtn');
+            
+            payNowBtn.addEventListener('click', function() {
+                paymentModal.style.display = 'block';
+            });
+            
+            addPaymentMethodBtn.addEventListener('click', function() {
+                addPaymentMethodModal.style.display = 'block';
+            });
+            
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    paymentModal.style.display = 'none';
+                    addPaymentMethodModal.style.display = 'none';
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+                if (e.target === addPaymentMethodModal) {
+                    addPaymentMethodModal.style.display = 'none';
+                }
+            });
+            
+            // Payment type toggle
+            const paymentTypeRadios = document.querySelectorAll('input[name="paymentType"]');
+            paymentTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'credit-card') {
+                        document.getElementById('creditCardForm').style.display = 'block';
+                        document.getElementById('bankAccountForm').style.display = 'none';
+                    } else {
+                        document.getElementById('creditCardForm').style.display = 'none';
+                        document.getElementById('bankAccountForm').style.display = 'block';
+                    }
+                });
+            });
+            
+            // Payment form submission
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const amount = document.getElementById('paymentAmount').value;
+                const method = document.getElementById('paymentMethod').value;
+                const date = document.getElementById('paymentDate').value;
+                const notes = document.getElementById('paymentNotes').value;
+                
+                // Show success message
+                alert(`Payment of $${amount} submitted successfully!\n\nPayment method: ${method}\nScheduled for: ${date}\n\nA confirmation email will be sent to you.`);
+                
+                // Close modal and reset form
+                paymentModal.style.display = 'none';
+                this.reset();
+                
+                // Update statements (mark as paid)
+                statements.forEach(statement => {
+                    if (statement.status === 'pending') {
+                        statement.status = 'paid';
+                    }
+                });
+                
+                loadStatements();
+            });
+            
+            // Add payment method form submission
+            document.getElementById('addPaymentMethodForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+                const isDefault = document.getElementById('saveAsDefault').checked;
+                
+                let newMethod;
+                
+                if (paymentType === 'credit-card') {
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const lastFour = cardNumber.slice(-4);
+                    newMethod = {
+                        id: paymentMethods.length + 1,
+                        type: 'credit-card',
+                        name: `Visa ending in ${lastFour}`,
+                        details: `Expires ${document.getElementById('cardExpiry').value}`,
+                        isDefault: isDefault
+                    };
+                } else {
+                    const accountNumber = document.getElementById('accountNumber').value;
+                    const lastFour = accountNumber.slice(-4);
+                    newMethod = {
+                        id: paymentMethods.length + 1,
+                        type: 'bank',
+                        name: 'Checking Account',
+                        details: `Bank of America ••••${lastFour}`,
+                        isDefault: isDefault
+                    };
+                }
+                
+                // If setting as default, remove default from others
+                if (isDefault) {
+                    paymentMethods.forEach(method => {
+                        method.isDefault = false;
+                    });
+                }
+                
+                paymentMethods.push(newMethod);
+                loadPaymentMethods();
+                
+                alert('Payment method added successfully!');
+                
+                // Close modal and reset form
+                addPaymentMethodModal.style.display = 'none';
+                this.reset();
+            });
+            
+            // View all statements button
+            document.getElementById('viewAllStatementsBtn').addEventListener('click', function() {
+                alert('Showing all statements. In a full implementation, this would show a complete history of all statements.');
+            });
+            
+            // View payments history button
+            document.getElementById('viewPaymentsBtn').addEventListener('click', function() {
+                alert('Showing payment history. In a full implementation, this would show a complete history of all payments made.');
+            });
+            
+            // View insurance details button
+            document.getElementById('viewInsuranceBtn').addEventListener('click', function() {
+                alert('Showing insurance details. In a full implementation, this would show complete insurance coverage details and claims history.');
+            });
+            
+            // Update payment summary when amount changes
+            document.getElementById('paymentAmount').addEventListener('input', function() {
+                updatePaymentSummary();
+            });
+            
+            // Sidebar navigation
+            setupSidebarNavigation();
+        });
+        
+        function loadStatements() {
+            const statementsTable = document.getElementById('statementsTable');
+            
+            if (statements.length === 0) {
+                statementsTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                            <i class="fas fa-file-invoice" style="font-size: 48px; margin-bottom: 15px; color: #ccc; display: block;"></i>
+                            <h4>No Statements Found</h4>
+                            <p>No billing statements available.</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                statementsTable.innerHTML = statements.map(statement => createStatementRow(statement)).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.btn-view-statement').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const statementId = this.dataset.id;
+                        viewStatement(statementId);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-pay-statement').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const statementId = this.dataset.id;
+                        payStatement(statementId);
+                    });
+                });
+            }
+        }
+        
+        function createStatementRow(statement) {
+            const date = new Date(statement.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            let statusClass = 'status-pending';
+            let statusText = 'Pending';
+            
+            if (statement.status === 'paid') {
+                statusClass = 'status-paid';
+                statusText = 'Paid';
+            } else if (statement.status === 'insurance') {
+                statusClass = 'status-insurance';
+                statusText = 'Processing';
+            } else if (statement.status === 'overdue') {
+                statusClass = 'status-overdue';
+                statusText = 'Overdue';
+            }
+            
+            let actions = '';
+            if (statement.status === 'pending' || statement.status === 'overdue') {
+                actions = `
+                    <div class="payment-actions">
+                        <button class="btn-primary btn-sm btn-pay-statement" data-id="${statement.id}">
+                            <i class="fas fa-credit-card"></i> Pay
+                        </button>
+                        <button class="btn-secondary btn-sm btn-view-statement" data-id="${statement.id}">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </div>
+                `;
+            } else {
+                actions = `
+                    <div class="payment-actions">
+                        <button class="btn-secondary btn-sm btn-view-statement" data-id="${statement.id}">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </div>
+                `;
+            }
+            
+            return `
+                <tr>
+                    <td>${formattedDate}</td>
+                    <td>${statement.service}</td>
+                    <td>${statement.provider}</td>
+                    <td>$${statement.amount.toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${actions}</td>
+                </tr>
+            `;
+        }
+        
+        function loadPaymentMethods() {
+            const paymentMethodsList = document.getElementById('paymentMethodsList');
+            
+            if (paymentMethods.length === 0) {
+                paymentMethodsList.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #999;">
+                        <i class="fas fa-credit-card" style="font-size: 48px; margin-bottom: 15px; color: #ccc;"></i>
+                        <h4>No Payment Methods</h4>
+                        <p>Add a payment method to make payments quickly and securely.</p>
+                    </div>
+                `;
+            } else {
+                paymentMethodsList.innerHTML = paymentMethods.map(method => createPaymentMethodCard(method)).join('');
+                
+                // Add event listeners
+                document.querySelectorAll('.btn-set-default').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const methodId = parseInt(this.dataset.id);
+                        setDefaultPaymentMethod(methodId);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-remove-method').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const methodId = parseInt(this.dataset.id);
+                        removePaymentMethod(methodId);
+                    });
+                });
+            }
+        }
+        
+        function createPaymentMethodCard(method) {
+            let icon = 'fas fa-credit-card';
+            if (method.type === 'bank') icon = 'fas fa-university';
+            
+            return `
+                <div class="method-card">
+                    <div class="method-info">
+                        <h4>
+                            <i class="${icon}"></i>
+                            ${method.name}
+                            ${method.isDefault ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px;">Default</span>' : ''}
+                        </h4>
+                        <p>${method.details}</p>
+                    </div>
+                    <div class="method-actions">
+                        ${!method.isDefault ? `<button class="btn-secondary btn-sm btn-set-default" data-id="${method.id}">Set as Default</button>` : ''}
+                        <button class="btn-secondary btn-sm btn-remove-method" data-id="${method.id}">Remove</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function viewStatement(statementId) {
+            const statement = statements.find(s => s.id == statementId);
+            if (statement) {
+                const date = new Date(statement.date);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                alert(`Statement Details:\n\n` +
+                      `Statement ID: ${statement.statementId}\n` +
+                      `Date: ${formattedDate}\n` +
+                      `Service: ${statement.service}\n` +
+                      `Provider: ${statement.provider}\n` +
+                      `Amount: $${statement.amount.toFixed(2)}\n` +
+                      `Status: ${statement.status}\n\n` +
+                      `In a full implementation, this would open a detailed PDF statement.`);
+            }
+        }
+        
+        function payStatement(statementId) {
+            const statement = statements.find(s => s.id == statementId);
+            if (statement) {
+                document.getElementById('paymentAmount').value = statement.amount;
+                updatePaymentSummary();
+                document.getElementById('paymentModal').style.display = 'block';
+            }
+        }
+        
+        function setDefaultPaymentMethod(methodId) {
+            // Set all methods to non-default
+            paymentMethods.forEach(method => {
+                method.isDefault = false;
+            });
+            
+            // Set the selected method as default
+            const method = paymentMethods.find(m => m.id === methodId);
+            if (method) {
+                method.isDefault = true;
+                loadPaymentMethods();
+                alert(`${method.name} is now your default payment method.`);
+            }
+        }
+        
+        function removePaymentMethod(methodId) {
+            if (confirm('Are you sure you want to remove this payment method?')) {
+                const index = paymentMethods.findIndex(m => m.id === methodId);
+                if (index !== -1) {
+                    const method = paymentMethods[index];
+                    
+                    // Don't allow removal if it's the only method
+                    if (paymentMethods.length === 1) {
+                        alert('You cannot remove your only payment method. Please add another method first.');
+                        return;
+                    }
+                    
+                    // If removing default, set another method as default
+                    if (method.isDefault) {
+                        paymentMethods.splice(index, 1);
+                        paymentMethods[0].isDefault = true;
+                    } else {
+                        paymentMethods.splice(index, 1);
+                    }
+                    
+                    loadPaymentMethods();
+                    alert('Payment method removed successfully.');
+                }
+            }
+        }
+        
+        function updatePaymentSummary() {
+            const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+            const fee = amount * 0.029; // 2.9% processing fee
+            const total = amount + fee;
+            
+            document.getElementById('summaryAmount').textContent = `$${amount.toFixed(2)}`;
+            document.getElementById('summaryFee').textContent = `$${fee.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => {
+                        l.parentElement.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.parentElement.classList.add('active');
+                });
+            });
+    
+    </script>
+</body>
+</html>

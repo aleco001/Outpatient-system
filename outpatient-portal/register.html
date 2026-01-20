@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient Portal - Register</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <h2>Join Our Patient Portal</h2>
+            <p>Register today to access your medical records, schedule appointments, and connect with your healthcare providers from anywhere.</p>
+            
+            <ul class="features">
+                <li><i class="fas fa-check-circle"></i> 24/7 access to your health information</li>
+                <li><i class="fas fa-check-circle"></i> Secure communication with doctors</li>
+                <li><i class="fas fa-check-circle"></i> Prescription refill requests</li>
+                <li><i class="fas fa-check-circle"></i> Online bill payment</li>
+                <li><i class="fas fa-check-circle"></i> Appointment reminders</li>
+            </ul>
+            
+            <div class="already-have-account">
+                <p>Already have an account?</p>
+                <a href="index.html" class="btn-secondary">Sign In Here</a>
+            </div>
+        </div>
+        
+        <!-- Right Section - Registration Form -->
+        <div class="right-section">
+            <div class="login-header">
+                <h2>Create Account</h2>
+                <p>Fill in your details to create your patient portal account</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="firstName" class="form-control" placeholder="Enter your first name" required>
+                        </div>
+                        <div class="error-message" id="firstName-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="lastName" class="form-control" placeholder="Enter your last name" required>
+                        </div>
+                        <div class="error-message" id="lastName-error"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="error-message" id="email-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-at"></i>
+                        <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
+                    </div>
+                    <div class="error-message" id="username-error"></div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                        <small class="form-text">Must be at least 8 characters</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                        </div>
+                        <div class="error-message" id="confirmPassword-error"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-calendar"></i>
+                        <input type="date" id="dob" class="form-control" required>
+                    </div>
+                    <div class="error-message" id="dob-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" class="form-control" placeholder="(123) 456-7890" required>
+                    </div>
+                    <div class="error-message" id="phone-error"></div>
+                    <small class="form-text">Enter your 10-digit phone number</small>
+                </div>
+                
+                <div class="form-group terms">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> *</label>
+                    <div class="error-message" id="terms-error"></div>
+                </div>
+                
+                <button type="submit" class="btn-login">Create Account</button>
+                
+                <div class="signup-link">
+                    Already have an account? <a href="index.html">Sign in here</a>
+                </div>
+            </form>
+            
+            <div class="footer">
+                <p>&copy; <span id="currentYear"></span> MediCare Outpatient Portal. All rights reserved.</p>
+                <p>Need help? Contact support: <a href="mailto:alecongash@gmail.com">alecongash@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            
+            // Format phone number as user types
+            const phoneInput = document.getElementById('phone');
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                
+                if (value.length > 0) {
+                    if (value.length <= 3) {
+                        value = '(' + value;
+                    } else if (value.length <= 6) {
+                        value = '(' + value.substring(0, 3) + ') ' + value.substring(3);
+                    } else {
+                        value = '(' + value.substring(0, 3) + ') ' + value.substring(3, 6) + '-' + value.substring(6, 10);
+                    }
+                }
+                
+                e.target.value = value;
+            });
+            
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset all error messages
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(msg => {
+                    msg.style.display = 'none';
+                    msg.textContent = '';
+                });
+                
+                // Get form values
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const dob = document.getElementById('dob').value;
+                const phone = document.getElementById('phone').value.trim();
+                const terms = document.getElementById('terms').checked;
+                
+                let isValid = true;
+                
+                // Validate first name
+                if (firstName === '') {
+                    document.getElementById('firstName-error').textContent = 'First name is required';
+                    document.getElementById('firstName-error').style.display = 'block';
+                    isValid = false;
+                } else if (firstName.length < 2) {
+                    document.getElementById('firstName-error').textContent = 'First name must be at least 2 characters';
+                    document.getElementById('firstName-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate last name
+                if (lastName === '') {
+                    document.getElementById('lastName-error').textContent = 'Last name is required';
+                    document.getElementById('lastName-error').style.display = 'block';
+                    isValid = false;
+                } else if (lastName.length < 2) {
+                    document.getElementById('lastName-error').textContent = 'Last name must be at least 2 characters';
+                    document.getElementById('lastName-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    document.getElementById('email-error').textContent = 'Please enter a valid email address';
+                    document.getElementById('email-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate username
+                if (username.length < 3) {
+                    document.getElementById('username-error').textContent = 'Username must be at least 3 characters';
+                    document.getElementById('username-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (password.length < 8) {
+                    document.getElementById('password-error').textContent = 'Password must be at least 8 characters';
+                    document.getElementById('password-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate password confirmation
+                if (password !== confirmPassword) {
+                    document.getElementById('confirmPassword-error').textContent = 'Passwords do not match';
+                    document.getElementById('confirmPassword-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate date of birth
+                if (!dob) {
+                    document.getElementById('dob-error').textContent = 'Date of birth is required';
+                    document.getElementById('dob-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    // Check if user is at least 13 years old
+                    const birthDate = new Date(dob);
+                    const today = new Date();
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    
+                    if (age < 13) {
+                        document.getElementById('dob-error').textContent = 'You must be at least 13 years old to register';
+                        document.getElementById('dob-error').style.display = 'block';
+                        isValid = false;
+                    }
+                }
+                
+                // Validate phone number - FIXED VERSION
+                const cleanedPhone = phone.replace(/\D/g, ''); // Remove all non-digits
+                console.log('Cleaned phone:', cleanedPhone, 'Length:', cleanedPhone.length);
+                
+                if (cleanedPhone.length < 10) {
+                    document.getElementById('phone-error').textContent = 'Phone number must be at least 10 digits';
+                    document.getElementById('phone-error').style.display = 'block';
+                    isValid = false;
+                } else if (cleanedPhone.length > 15) {
+                    document.getElementById('phone-error').textContent = 'Phone number is too long';
+                    document.getElementById('phone-error').style.display = 'block';
+                    isValid = false;
+                }
+                // Note: We're not using a strict regex, just checking digit count
+                
+                // Validate terms
+                if (!terms) {
+                    document.getElementById('terms-error').textContent = 'You must agree to the terms and conditions';
+                    document.getElementById('terms-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Check if username or email already exists
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const userExists = users.find(u => u.username === username || u.email === email);
+                    
+                    if (userExists) {
+                        if (userExists.username === username) {
+                            document.getElementById('username-error').textContent = 'Username already taken';
+                            document.getElementById('username-error').style.display = 'block';
+                        } else {
+                            document.getElementById('email-error').textContent = 'Email already registered';
+                            document.getElementById('email-error').style.display = 'block';
+                        }
+                        return;
+                    }
+                    
+                    // Create new user object
+                    const newUser = {
+                        id: Date.now().toString(),
+                        firstName,
+                        lastName,
+                        email,
+                        username,
+                        password, // In a real app, this would be hashed
+                        dob,
+                        phone: cleanedPhone, // Store cleaned version
+                        registeredDate: new Date().toISOString(),
+                        mrn: 'MRN' + Math.floor(100000 + Math.random() * 900000) // Generate fake MRN
+                    };
+                    
+                    // Add user to localStorage
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // Show success message
+                    const btn = document.querySelector('.btn-login');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+                    btn.disabled = true;
+                    
+                    // Simulate API call delay
+                    setTimeout(() => {
+                        alert('Account created successfully! Please login with your credentials.');
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            });
+            
+            // Set max date for date of birth (13 years ago)
+            const dobInput = document.getElementById('dob');
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+            dobInput.max = maxDate.toISOString().split('T')[0];
+            
+            // Set placeholder date for DOB (18 years ago as example)
+            const exampleDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            dobInput.value = exampleDate.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

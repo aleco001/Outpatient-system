@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient Portal - My Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Profile-specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #0d4d8c;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0d4d8c;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-dropdown i {
+            font-size: 32px;
+            color: #0d4d8c;
+            cursor: pointer;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 30px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style-type: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+        }
+        
+        .sidebar-menu li.active a {
+            background-color: #e6f2ff;
+            color: #0d4d8c;
+            border-right: 4px solid #0d4d8c;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a6fc4, #0d4d8c);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .profile-sidebar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a6fc4, #0d4d8c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 48px;
+            color: white;
+        }
+        
+        .profile-header h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .profile-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-item h4 {
+            font-size: 24px;
+            color: #1a6fc4;
+            margin-bottom: 5px;
+        }
+        
+        .stat-item p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+        
+        .profile-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-header h3 {
+            color: #0d4d8c;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #0d4d8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a6fc4;
+        }
+        
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 20px;
+        }
+        
+        .info-item label {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .info-item .value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #0d4d8c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 77, 140, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .emergency-contacts {
+            margin-top: 30px;
+        }
+        
+        .contact-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .contact-info h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .contact-info p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .contact-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            
+            .sidebar-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .sidebar-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+            }
+            
+            .sidebar-menu li.active a {
+                border-right: none;
+                border-bottom: 4px solid #0d4d8c;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .contact-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .contact-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .profile-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .contact-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <div class="nav-user">
+                <div class="user-info">
+                    <span id="userGreeting">Hello, Patient</span>
+                    <div class="user-dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-content">
+                            <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="appointments.html"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="records.html"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                <li class="active"><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="#"><i class="fas fa-prescription"></i> Prescriptions</a></li>
+                <li><a href="#"><i class="fas fa-comment-medical"></i> Messages</a></li>
+                <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> Billing</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="welcome-banner">
+                <h2>My Profile</h2>
+                <p>Manage your personal information and account settings</p>
+            </div>
+            
+            <div class="profile-container">
+                <!-- Profile Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 id="profileName">John Doe</h3>
+                        <p id="profileEmail">john.doe@example.com</p>
+                        <p>Patient ID: <span id="patientId">MRN-123456</span></p>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <h4 id="statAppointments">2</h4>
+                            <p>Upcoming Appointments</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 id="statPrescriptions">3</h4>
+                            <p>Active Prescriptions</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn-primary" style="width: 100%;" id="changePasswordBtn">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                        <button class="btn-secondary" style="width: 100%; margin-top: 10px;" id="notificationSettingsBtn">
+                            <i class="fas fa-bell"></i> Notification Settings
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Profile Content -->
+                <div class="profile-content">
+                    <div class="section-header">
+                        <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                        <button class="btn-secondary" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                    
+                    <div class="info-grid" id="profileInfoView">
+                        <!-- Personal Information View -->
+                        <div class="info-item">
+                            <label>Full Name</label>
+                            <div class="value" id="infoFullName">John A. Doe</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Date of Birth</label>
+                            <div class="value" id="infoDOB">January 15, 1980</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Gender</label>
+                            <div class="value" id="infoGender">Male</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Email Address</label>
+                            <div class="value" id="infoEmail">john.doe@example.com</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Phone Number</label>
+                            <div class="value" id="infoPhone">(123) 456-7890</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Address</label>
+                            <div class="value" id="infoAddress">123 Main Street, Anytown, CA 12345</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Primary Care Physician</label>
+                            <div class="value" id="infoPhysician">Dr. Michael Johnson</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Insurance Provider</label>
+                            <div class="value" id="infoInsurance">MediCare Health Plans</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Member Since</label>
+                            <div class="value" id="infoMemberSince">January 2022</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Edit Profile Form (Hidden by default) -->
+                    <form id="editProfileForm" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editFirstName">First Name *</label>
+                                <input type="text" id="editFirstName" class="form-control" value="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editLastName">Last Name *</label>
+                                <input type="text" id="editLastName" class="form-control" value="Doe" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editDOB">Date of Birth</label>
+                                <input type="date" id="editDOB" class="form-control" value="1980-01-15">
+                            </div>
+                            <div class="form-group">
+                                <label for="editGender">Gender</label>
+                                <select id="editGender" class="form-control">
+                                    <option value="male" selected>Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editEmail">Email Address *</label>
+                            <input type="email" id="editEmail" class="form-control" value="john.doe@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editPhone">Phone Number *</label>
+                            <input type="tel" id="editPhone" class="form-control" value="1234567890" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editAddress">Address</label>
+                            <textarea id="editAddress" class="form-control" rows="2">123 Main Street, Anytown, CA 12345</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editPhysician">Primary Care Physician</label>
+                                <select id="editPhysician" class="form-control">
+                                    <option value="dr-johnson" selected>Dr. Michael Johnson</option>
+                                    <option value="dr-smith">Dr. Sarah Smith</option>
+                                    <option value="dr-williams">Dr. Robert Williams</option>
+                                    <option value="none">None assigned</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editInsurance">Insurance Provider</label>
+                                <select id="editInsurance" class="form-control">
+                                    <option value="medicare" selected>MediCare Health Plans</option>
+                                    <option value="healthplus">HealthPlus Insurance</option>
+                                    <option value="bluecross">BlueCross BlueShield</option>
+                                    <option value="aetna">Aetna</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions" style="display: flex; gap: 15px; margin-top: 25px;">
+                            <button type="button" class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                    
+                    <!-- Emergency Contacts Section -->
+                    <div class="emergency-contacts">
+                        <div class="section-header">
+                            <h3><i class="fas fa-phone-alt"></i> Emergency Contacts</h3>
+                            <button class="btn-primary" id="addContactBtn">
+                                <i class="fas fa-plus"></i> Add Contact
+                            </button>
+                        </div>
+                        
+                        <div class="contact-list" id="emergencyContactsList">
+                            <!-- Emergency contacts will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; <span id="currentYear"></span> MediCare Outpatient Portal. All rights reserved.</p>
+            <p>For medical emergencies, call 911 immediately.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Sample emergency contacts data
+        const emergencyContacts = [
+            {
+                id: 1,
+                name: "Jane Doe",
+                relationship: "Spouse",
+                phone: "(123) 456-7891",
+                email: "jane.doe@example.com",
+                isPrimary: true
+            },
+            {
+                id: 2,
+                name: "Robert Smith",
+                relationship: "Brother",
+                phone: "(123) 456-7892",
+                email: "robert.smith@example.com",
+                isPrimary: false
+            }
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // Load profile data
+            loadProfileData(currentUser);
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+            
+            // Edit profile button
+            document.getElementById('editProfileBtn').addEventListener('click', function() {
+                document.getElementById('profileInfoView').style.display = 'none';
+                document.getElementById('editProfileForm').style.display = 'block';
+                this.style.display = 'none';
+            });
+            
+            // Cancel edit button
+            document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                document.getElementById('editProfileForm').style.display = 'none';
+                document.getElementById('profileInfoView').style.display = 'block';
+                document.getElementById('editProfileBtn').style.display = 'flex';
+            });
+            
+            // Save profile form
+            document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const firstName = document.getElementById('editFirstName').value;
+                const lastName = document.getElementById('editLastName').value;
+                const dob = document.getElementById('editDOB').value;
+                const gender = document.getElementById('editGender').value;
+                const email = document.getElementById('editEmail').value;
+                const phone = document.getElementById('editPhone').value;
+                const address = document.getElementById('editAddress').value;
+                const physician = document.getElementById('editPhysician').value;
+                const insurance = document.getElementById('editInsurance').value;
+                
+                // Update profile display
+                document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('userGreeting').textContent = `Hello, ${firstName}`;
+                
+                document.getElementById('infoFullName').textContent = `${firstName} ${lastName}`;
+                
+                if (dob) {
+                    const dobDate = new Date(dob);
+                    document.getElementById('infoDOB').textContent = dobDate.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                }
+                
+                document.getElementById('infoGender').textContent = gender.charAt(0).toUpperCase() + gender.slice(1);
+                document.getElementById('infoEmail').textContent = email;
+                document.getElementById('infoPhone').textContent = formatPhoneNumber(phone);
+                document.getElementById('infoAddress').textContent = address;
+                
+                // Update physician name
+                let physicianName = 'Dr. Michael Johnson';
+                if (physician === 'dr-smith') physicianName = 'Dr. Sarah Smith';
+                if (physician === 'dr-williams') physicianName = 'Dr. Robert Williams';
+                if (physician === 'none') physicianName = 'Not assigned';
+                document.getElementById('infoPhysician').textContent = physicianName;
+                
+                // Update insurance
+                let insuranceName = 'MediCare Health Plans';
+                if (insurance === 'healthplus') insuranceName = 'HealthPlus Insurance';
+                if (insurance === 'bluecross') insuranceName = 'BlueCross BlueShield';
+                if (insurance === 'aetna') insuranceName = 'Aetna';
+                document.getElementById('infoInsurance').textContent = insuranceName;
+                
+                // Show success message
+                alert('Profile updated successfully!');
+                
+                // Switch back to view mode
+                document.getElementById('editProfileForm').style.display = 'none';
+                document.getElementById('profileInfoView').style.display = 'block';
+                document.getElementById('editProfileBtn').style.display = 'flex';
+            });
+            
+            // Change password button
+            document.getElementById('changePasswordBtn').addEventListener('click', function() {
+                const newPassword = prompt('Enter new password (minimum 8 characters):');
+                if (newPassword) {
+                    if (newPassword.length < 8) {
+                        alert('Password must be at least 8 characters long.');
+                        return;
+                    }
+                    const confirmPassword = prompt('Confirm new password:');
+                    if (confirmPassword === newPassword) {
+                        alert('Password changed successfully!');
+                    } else {
+                        alert('Passwords do not match. Please try again.');
+                    }
+                }
+            });
+            
+            // Notification settings button
+            document.getElementById('notificationSettingsBtn').addEventListener('click', function() {
+                alert('Notification settings would open here. You can configure email and SMS notifications for appointments, reminders, and test results.');
+            });
+            
+            // Add emergency contact button
+            document.getElementById('addContactBtn').addEventListener('click', function() {
+                const name = prompt('Enter contact name:');
+                if (name) {
+                    const relationship = prompt('Enter relationship (e.g., Spouse, Parent, Friend):');
+                    if (relationship) {
+                        const phone = prompt('Enter phone number:');
+                        if (phone) {
+                            const email = prompt('Enter email address (optional):');
+                            
+                            const newContact = {
+                                id: Date.now(),
+                                name: name,
+                                relationship: relationship,
+                                phone: phone,
+                                email: email || 'Not provided',
+                                isPrimary: emergencyContacts.length === 0
+                            };
+                            
+                            emergencyContacts.push(newContact);
+                            loadEmergencyContacts();
+                            alert('Emergency contact added successfully!');
+                        }
+                    }
+                }
+            });
+            
+            // Load emergency contacts
+            loadEmergencyContacts();
+            
+            // Sidebar navigation
+            setupSidebarNavigation();
+        });
+        
+        function loadProfileData(user) {
+            // For demo purposes, if no user is logged in, show demo data
+            if (!user.id) {
+                user = {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@example.com',
+                    phone: '1234567890',
+                    dob: '1980-01-15'
+                };
+                document.getElementById('userGreeting').textContent = 'Hello, Guest';
+            } else {
+                document.getElementById('userGreeting').textContent = `Hello, ${user.firstName}`;
+            }
+            
+            // Update profile information
+            document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('profileEmail').textContent = user.email || 'john.doe@example.com';
+            document.getElementById('infoFullName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('infoEmail').textContent = user.email || 'john.doe@example.com';
+            
+            if (user.phone) {
+                document.getElementById('infoPhone').textContent = formatPhoneNumber(user.phone);
+            }
+            
+            if (user.dob) {
+                const dobDate = new Date(user.dob);
+                document.getElementById('infoDOB').textContent = dobDate.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                // Set edit form DOB
+                document.getElementById('editDOB').value = user.dob;
+                document.getElementById('editFirstName').value = user.firstName;
+                document.getElementById('editLastName').value = user.lastName;
+                document.getElementById('editEmail').value = user.email || '';
+                document.getElementById('editPhone').value = user.phone || '';
+            }
+            
+            // Generate random stats
+            document.getElementById('statAppointments').textContent = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('statPrescriptions').textContent = Math.floor(Math.random() * 5) + 1;
+        }
+        
+        function loadEmergencyContacts() {
+            const contactsList = document.getElementById('emergencyContactsList');
+            
+            if (emergencyContacts.length === 0) {
+                contactsList.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #999;">
+                        <i class="fas fa-users" style="font-size: 48px; margin-bottom: 15px; color: #ccc;"></i>
+                        <h4>No Emergency Contacts</h4>
+                        <p>Add emergency contacts who should be notified in case of an emergency.</p>
+                    </div>
+                `;
+            } else {
+                contactsList.innerHTML = emergencyContacts.map(contact => `
+                    <div class="contact-card">
+                        <div class="contact-info">
+                            <h4>${contact.name} ${contact.isPrimary ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px;">Primary</span>' : ''}</h4>
+                            <p><strong>Relationship:</strong> ${contact.relationship}</p>
+                            <p><strong>Phone:</strong> ${formatPhoneNumber(contact.phone)}</p>
+                            <p><strong>Email:</strong> ${contact.email}</p>
+                        </div>
+                        <div class="contact-actions">
+                            ${!contact.isPrimary ? `<button class="btn-secondary btn-sm set-primary-btn" data-id="${contact.id}">Set as Primary</button>` : ''}
+                            <button class="btn-secondary btn-sm delete-contact-btn" data-id="${contact.id}">Remove</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add event listeners
+                document.querySelectorAll('.set-primary-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const contactId = parseInt(this.dataset.id);
+                        setPrimaryContact(contactId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-contact-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const contactId = parseInt(this.dataset.id);
+                        deleteContact(contactId);
+                    });
+                });
+            }
+        }
+        
+        function setPrimaryContact(contactId) {
+            // Set all contacts to non-primary
+            emergencyContacts.forEach(contact => {
+                contact.isPrimary = false;
+            });
+            
+            // Set the selected contact as primary
+            const contact = emergencyContacts.find(c => c.id === contactId);
+            if (contact) {
+                contact.isPrimary = true;
+                loadEmergencyContacts();
+                alert(`${contact.name} is now your primary emergency contact.`);
+            }
+        }
+        
+        function deleteContact(contactId) {
+            if (confirm('Are you sure you want to remove this emergency contact?')) {
+                const index = emergencyContacts.findIndex(c => c.id === contactId);
+                if (index !== -1) {
+                    const contact = emergencyContacts[index];
+                    emergencyContacts.splice(index, 1);
+                    
+                    // If we deleted the primary contact and there are other contacts, set the first one as primary
+                    if (contact.isPrimary && emergencyContacts.length > 0) {
+                        emergencyContacts[0].isPrimary = true;
+                    }
+                    
+                    loadEmergencyContacts();
+                    alert('Emergency contact removed successfully.');
+                }
+            }
+        }
+        
+        function formatPhoneNumber(phone) {
+            // Simple phone formatting
+            const cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length === 10) {
+                return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6)}`;
+            }
+            return phone;
+        }
+        
+        function setupSidebarNavigation() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => {
+                        l.parentElement.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.parentElement.classList.add('active');
+                    
+                    // If the link doesn't have a href or is "#", prevent default
+                    if (!this.getAttribute('href') || this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                        alert('This feature is under development.');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

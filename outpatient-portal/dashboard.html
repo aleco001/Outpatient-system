@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient Portal - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Dashboard-specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #0d4d8c;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0d4d8c;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-dropdown i {
+            font-size: 32px;
+            color: #0d4d8c;
+            cursor: pointer;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 30px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style-type: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+        }
+        
+        .sidebar-menu li.active a {
+            background-color: #e6f2ff;
+            color: #0d4d8c;
+            border-right: 4px solid #0d4d8c;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a6fc4, #0d4d8c);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .dashboard-card h3 {
+            color: #0d4d8c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a6fc4;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-card p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .card-link {
+            color: #0d4d8c;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-section h3 {
+            color: #0d4d8c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .activity-icon.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .activity-icon.info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .activity-icon.warning {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .activity-content p {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .activity-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .quick-action-btn {
+            background-color: #f0f8ff;
+            border: 1px solid #d0e4ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #0d4d8c;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quick-action-btn:hover {
+            background-color: #e1f0ff;
+            transform: translateY(-3px);
+        }
+        
+        .quick-action-btn i {
+            font-size: 24px;
+        }
+        
+        .quick-action-btn span {
+            font-weight: 500;
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Responsive Dashboard */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            
+            .sidebar-menu li {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .sidebar-menu a {
+                padding: 10px 15px;
+                white-space: nowrap;
+            }
+            
+            .sidebar-menu li.active a {
+                border-right: none;
+                border-bottom: 4px solid #0d4d8c;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <div class="nav-user">
+                <div class="user-info">
+                    <span id="userGreeting">Hello, Patient</span>
+                    <div class="user-dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-content">
+                            <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="appointments.html"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                <li><a href="records.html"><i class="fas fa-file-medical"></i> Medical Records</a></li>
+                <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="#"><i class="fas fa-prescription"></i> Prescriptions</a></li>
+                <li><a href="#"><i class="fas fa-comment-medical"></i> Messages</a></li>
+                <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> Billing</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="welcome-banner">
+                <h2>Welcome back, <span id="patientName">Patient</span>!</h2>
+                <p>Here's your health summary and upcoming activities</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Quick Stats -->
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-calendar-day"></i> Upcoming Appointments</h3>
+                    <div class="stat-number" id="upcomingAppointments">2</div>
+                    <p>Next: <span id="nextAppointment">Tomorrow, 10:00 AM</span></p>
+                    <a href="appointments.html" class="card-link">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-prescription-bottle"></i> Active Prescriptions</h3>
+                    <div class="stat-number" id="activePrescriptions">3</div>
+                    <p>Last filled: <span id="lastPrescription">2 weeks ago</span></p>
+                    <a href="#" class="card-link">Manage <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-file-medical-alt"></i> Medical Records</h3>
+                    <div class="stat-number" id="medicalRecords">12</div>
+                    <p>Last updated: <span id="lastRecordUpdate">1 week ago</span></p>
+                    <a href="records.html" class="card-link">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-envelope"></i> Unread Messages</h3>
+                    <div class="stat-number" id="unreadMessages">1</div>
+                    <p>From: <span id="lastMessageFrom">Dr. Smith</span></p>
+                    <a href="#" class="card-link">Check Messages <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Appointment Confirmed</h4>
+                            <p>Your appointment with Dr. Johnson has been confirmed for December 15, 2023</p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon info">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Lab Results Available</h4>
+                            <p>Your blood test results from November 28 are now available in your records</p>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-prescription"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Prescription Renewal</h4>
+                            <p>Your prescription for Metformin is due for renewal in 7 days</p>
+                            <span class="activity-time">3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="dashboard-section">
+                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="appointments.html" class="quick-action-btn">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Schedule Appointment</span>
+                    </a>
+                    <a href="#" class="quick-action-btn">
+                        <i class="fas fa-prescription"></i>
+                        <span>Request Prescription Refill</span>
+                    </a>
+                    <a href="records.html" class="quick-action-btn">
+                        <i class="fas fa-download"></i>
+                        <span>Download Medical Records</span>
+                    </a>
+                    <a href="#" class="quick-action-btn">
+                        <i class="fas fa-comment-medical"></i>
+                        <span>Message Your Doctor</span>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; <span id="currentYear"></span> MediCare Outpatient Portal. All rights reserved.</p>
+            <p>For medical emergencies, call 911 immediately.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // For demo purposes, if no user is logged in, show a demo user
+            if (!isLoggedIn || isLoggedIn !== 'true' || !currentUser.id) {
+                // Create a demo user for viewing
+                const demoUser = {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@example.com'
+                };
+                
+                // Display demo user info
+                document.getElementById('userGreeting').textContent = `Hello, ${demoUser.firstName}`;
+                document.getElementById('patientName').textContent = demoUser.firstName;
+                
+                // Add a message about demo mode
+                const welcomeBanner = document.querySelector('.welcome-banner');
+                const demoNotice = document.createElement('div');
+                demoNotice.style.marginTop = '10px';
+                demoNotice.style.fontSize = '14px';
+                demoNotice.style.opacity = '0.9';
+                demoNotice.innerHTML = '<i class="fas fa-info-circle"></i> Demo Mode - Please login for full access';
+                welcomeBanner.appendChild(demoNotice);
+            } else {
+                // Display real user info
+                document.getElementById('userGreeting').textContent = `Hello, ${currentUser.firstName}`;
+                document.getElementById('patientName').textContent = currentUser.firstName;
+            }
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove login status
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            });
+            
+            // Generate some fake data for the dashboard
+            generateDashboardData();
+            
+            // Set up sidebar navigation
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => {
+                        l.parentElement.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.parentElement.classList.add('active');
+                    
+                    // If the link doesn't have a href or is "#", prevent default
+                    if (this.getAttribute('href') === '#' || !this.getAttribute('href')) {
+                        e.preventDefault();
+                        alert('This page is under development. Dashboard is fully functional.');
+                    }
+                });
+            });
+        });
+        
+        function generateDashboardData() {
+            // Generate random stats
+            const stats = {
+                appointments: Math.floor(Math.random() * 5) + 1,
+                prescriptions: Math.floor(Math.random() * 5) + 1,
+                records: Math.floor(Math.random() * 20) + 5,
+                messages: Math.floor(Math.random() * 3)
+            };
+            
+            // Update the stats on the page
+            document.getElementById('upcomingAppointments').textContent = stats.appointments;
+            document.getElementById('activePrescriptions').textContent = stats.prescriptions;
+            document.getElementById('medicalRecords').textContent = stats.records;
+            document.getElementById('unreadMessages').textContent = stats.messages;
+            
+            // Set next appointment time
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const appointmentTime = tomorrow.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('nextAppointment').textContent = 
+                `Tomorrow, ${appointmentTime}`;
+                
+            // Set last prescription date
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+            const prescriptionDate = twoWeeksAgo.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('lastPrescription').textContent = prescriptionDate;
+            
+            // Set last record update
+            const lastWeek = new Date();
+            lastWeek.setDate(lastWeek.getDate() - 7);
+            const recordDate = lastWeek.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('lastRecordUpdate').textContent = recordDate;
+        }
+    </script>
+</body>
+</html>
