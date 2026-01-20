@@ -1,0 +1,616 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Outpatient - Admin Portal</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin Login Specific Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d4d8c 0%, #1a6fc4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .admin-login-container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            min-height: 700px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .admin-login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #0d4d8c 0%, #1a6fc4 100%);
+            color: white;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .admin-logo i {
+            font-size: 42px;
+            margin-right: 20px;
+        }
+        
+        .admin-logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .admin-login-left h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .admin-login-left p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .admin-features {
+            list-style: none;
+            margin-top: 40px;
+        }
+        
+        .admin-features li {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .admin-features i {
+            margin-right: 15px;
+            font-size: 20px;
+            color: #a3d5ff;
+        }
+        
+        .admin-login-right {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+        
+        .admin-login-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .admin-login-header h2 {
+            color: #0d4d8c;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-login-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .admin-role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f5f7fa;
+            padding: 10px;
+            border-radius: 12px;
+        }
+        
+        .role-btn {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .role-btn.active {
+            background: white;
+            border-color: #0d4d8c;
+            color: #0d4d8c;
+            box-shadow: 0 4px 12px rgba(13, 77, 140, 0.1);
+        }
+        
+        .role-btn i {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-form-group {
+            margin-bottom: 25px;
+        }
+        
+        .admin-form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .admin-input-with-icon {
+            position: relative;
+        }
+        
+        .admin-input-with-icon i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0d4d8c;
+            font-size: 18px;
+        }
+        
+        .admin-form-control {
+            width: 100%;
+            padding: 16px 20px 16px 55px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .admin-form-control:focus {
+            border-color: #0d4d8c;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(13, 77, 140, 0.1);
+        }
+        
+        .admin-login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .admin-remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .admin-forgot-link {
+            color: #0d4d8c;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .admin-forgot-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-admin-login {
+            background: linear-gradient(135deg, #0d4d8c 0%, #1a6fc4 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 25px;
+        }
+        
+        .btn-admin-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 77, 140, 0.3);
+        }
+        
+        .btn-admin-login:active {
+            transform: translateY(0);
+        }
+        
+        .admin-login-footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .admin-login-footer a {
+            color: #0d4d8c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .admin-login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .security-badge i {
+            font-size: 20px;
+            color: #a3d5ff;
+        }
+        
+        .security-badge span {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 992px) {
+            .admin-login-container {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .admin-login-left,
+            .admin-login-right {
+                padding: 40px 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .admin-login-left,
+            .admin-login-right {
+                padding: 30px 20px;
+            }
+            
+            .admin-login-left h2 {
+                font-size: 28px;
+            }
+            
+            .admin-logo h1 {
+                font-size: 24px;
+            }
+            
+            .admin-role-selector {
+                flex-direction: column;
+            }
+            
+            .admin-login-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <!-- Left Section -->
+        <div class="admin-login-left">
+            <div class="admin-logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h1>MediCare Outpatient</h1>
+            </div>
+            
+            <h2>Admin Portal</h2>
+            <p>Secure access to manage patient records, appointments, doctors, and healthcare operations. Authorized personnel only.</p>
+            
+            <ul class="admin-features">
+                <li><i class="fas fa-shield-alt"></i> Enterprise-grade security & encryption</li>
+                <li><i class="fas fa-users-cog"></i> Multi-role access control</li>
+                <li><i class="fas fa-chart-line"></i> Real-time analytics & reporting</li>
+                <li><i class="fas fa-database"></i> Comprehensive patient management</li>
+                <li><i class="fas fa-calendar-check"></i> Appointment scheduling system</li>
+            </ul>
+            
+            <div class="security-badge">
+                <i class="fas fa-lock"></i>
+                <span>HIPAA Compliant • 256-bit Encryption • Two-Factor Authentication</span>
+            </div>
+        </div>
+        
+        <!-- Right Section - Login Form -->
+        <div class="admin-login-right">
+            <div class="admin-login-header">
+                <h2>Administrator Login</h2>
+                <p>Select your role and enter credentials to access the admin portal</p>
+            </div>
+            
+            <div class="admin-role-selector">
+                <button class="role-btn active" data-role="super-admin">
+                    <i class="fas fa-user-shield"></i>
+                    Super Admin
+                </button>
+                <button class="role-btn" data-role="admin">
+                    <i class="fas fa-user-tie"></i>
+                    Admin
+                </button>
+                <button class="role-btn" data-role="doctor">
+                    <i class="fas fa-user-md"></i>
+                    Doctor
+                </button>
+                <button class="role-btn" data-role="staff">
+                    <i class="fas fa-user-nurse"></i>
+                    Staff
+                </button>
+            </div>
+            
+            <form id="adminLoginForm">
+                <div class="admin-form-group">
+                    <label for="adminUsername">Username / Employee ID</label>
+                    <div class="admin-input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="adminUsername" class="admin-form-control" placeholder="Enter username or employee ID" required>
+                    </div>
+                    <div class="admin-error-message" id="username-error"></div>
+                </div>
+                
+                <div class="admin-form-group">
+                    <label for="adminPassword">Password</label>
+                    <div class="admin-input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="adminPassword" class="admin-form-control" placeholder="Enter your password" required>
+                    </div>
+                    <div class="admin-error-message" id="password-error"></div>
+                </div>
+                
+                <div class="admin-form-group">
+                    <label for="adminTwoFactor">Two-Factor Code (Optional)</label>
+                    <div class="admin-input-with-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                        <input type="text" id="adminTwoFactor" class="admin-form-control" placeholder="Enter 6-digit code if enabled">
+                    </div>
+                    <div class="admin-error-message" id="twofactor-error"></div>
+                </div>
+                
+                <div class="admin-login-options">
+                    <div class="admin-remember">
+                        <input type="checkbox" id="adminRemember">
+                        <label for="adminRemember">Remember this device</label>
+                    </div>
+                    <a href="#" class="admin-forgot-link">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="btn-admin-login">
+                    <i class="fas fa-sign-in-alt"></i> Login to Admin Portal
+                </button>
+                
+                <div class="admin-login-footer">
+                    <p>Need help? Contact system administrator at <a href="mailto:sysadmin@medicare.example.com">sysadmin@medicare.example.com</a></p>
+                    <p>⚠️ Unauthorized access is prohibited and may result in legal action</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Role selector functionality
+            const roleButtons = document.querySelectorAll('.role-btn');
+            roleButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    roleButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update form placeholder based on role
+                    const role = this.dataset.role;
+                    const usernameInput = document.getElementById('adminUsername');
+                    
+                    switch(role) {
+                        case 'super-admin':
+                            usernameInput.placeholder = "Enter super admin username";
+                            break;
+                        case 'admin':
+                            usernameInput.placeholder = "Enter admin username";
+                            break;
+                        case 'doctor':
+                            usernameInput.placeholder = "Enter doctor ID";
+                            break;
+                        case 'staff':
+                            usernameInput.placeholder = "Enter staff ID";
+                            break;
+                    }
+                });
+            });
+            
+            // Admin login form submission
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            
+            adminLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const username = document.getElementById('adminUsername').value.trim();
+                const password = document.getElementById('adminPassword').value;
+                const twoFactor = document.getElementById('adminTwoFactor').value.trim();
+                const remember = document.getElementById('adminRemember').checked;
+                const activeRole = document.querySelector('.role-btn.active').dataset.role;
+                
+                // Reset error messages
+                document.querySelectorAll('.admin-error-message').forEach(msg => {
+                    msg.style.display = 'none';
+                });
+                
+                let isValid = true;
+                
+                // Validate username
+                if (username === '' || username.length < 3) {
+                    document.getElementById('username-error').textContent = 'Please enter a valid username';
+                    document.getElementById('username-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (password === '' || password.length < 6) {
+                    document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
+                    document.getElementById('password-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Show loading state
+                    const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API authentication
+                    setTimeout(() => {
+                        // For demo purposes - accept any credentials
+                        const adminUser = {
+                            id: 'admin_' + Date.now(),
+                            username: username,
+                            role: activeRole,
+                            name: username === 'admin' ? 'System Administrator' : 
+                                  username === 'doctor' ? 'Dr. Michael Johnson' : 
+                                  username === 'staff' ? 'Nurse Jane Wilson' : 'Administrator',
+                            permissions: getPermissionsByRole(activeRole),
+                            loginTime: new Date().toISOString()
+                        };
+                        
+                        // Store admin session
+                        localStorage.setItem('isAdminLoggedIn', 'true');
+                        localStorage.setItem('adminUser', JSON.stringify(adminUser));
+                        localStorage.setItem('adminRole', activeRole);
+                        
+                        if (remember) {
+                            localStorage.setItem('rememberAdmin', 'true');
+                        }
+                        
+                        // Redirect to admin dashboard
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1500);
+                }
+            });
+            
+            // Forgot password link
+            document.querySelector('.admin-forgot-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = prompt('Enter your registered admin email address:');
+                if (email) {
+                    alert(`Password reset instructions have been sent to ${email}. Please check your inbox.`);
+                }
+            });
+            
+            // Check for remembered admin
+            if (localStorage.getItem('rememberAdmin') === 'true') {
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
+                if (adminUser.username) {
+                    document.getElementById('adminUsername').value = adminUser.username;
+                    document.getElementById('adminRemember').checked = true;
+                    
+                    // Set active role button
+                    const role = adminUser.role || 'admin';
+                    document.querySelectorAll('.role-btn').forEach(btn => {
+                        if (btn.dataset.role === role) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                }
+            }
+            
+            // Auto-focus username field
+            document.getElementById('adminUsername').focus();
+        });
+        
+        function getPermissionsByRole(role) {
+            const permissions = {
+                'super-admin': {
+                    dashboard: true,
+                    patients: true,
+                    doctors: true,
+                    appointments: true,
+                    records: true,
+                    billing: true,
+                    reports: true,
+                    settings: true,
+                    users: true
+                },
+                'admin': {
+                    dashboard: true,
+                    patients: true,
+                    doctors: true,
+                    appointments: true,
+                    records: true,
+                    billing: true,
+                    reports: true,
+                    settings: false,
+                    users: false
+                },
+                'doctor': {
+                    dashboard: true,
+                    patients: true,
+                    doctors: false,
+                    appointments: true,
+                    records: true,
+                    billing: false,
+                    reports: true,
+                    settings: false,
+                    users: false
+                },
+                'staff': {
+                    dashboard: true,
+                    patients: true,
+                    doctors: false,
+                    appointments: true,
+                    records: false,
+                    billing: true,
+                    reports: false,
+                    settings: false,
+                    users: false
+                }
+            };
+            
+            return permissions[role] || permissions['staff'];
+        }
+    </script>
+</body>
+</html>

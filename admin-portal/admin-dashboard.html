@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MediCare Outpatient</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin Dashboard Specific Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Admin Top Navigation */
+        .admin-top-nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        .admin-nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .admin-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .admin-menu-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #0d4d8c;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-menu-toggle:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .admin-logo i {
+            font-size: 28px;
+            color: #0d4d8c;
+        }
+        
+        .admin-logo h1 {
+            font-size: 22px;
+            color: #0d4d8c;
+            font-weight: 600;
+        }
+        
+        .admin-logo span {
+            background: linear-gradient(135deg, #0d4d8c, #1a6fc4);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .admin-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .admin-nav-item {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .admin-notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        .admin-nav-icon {
+            font-size: 22px;
+            color: #666;
+            transition: color 0.3s;
+        }
+        
+        .admin-nav-icon:hover {
+            color: #0d4d8c;
+        }
+        
+        .admin-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-user-profile:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .admin-user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0d4d8c, #1a6fc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .admin-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .admin-user-role {
+            font-size: 12px;
+            color: #666;
+            background: #f0f8ff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 2px;
+            text-align: center;
+        }
+        
+        /* Admin Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+        
+        .admin-sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+        
+        .admin-sidebar-header {
+            padding: 30px 25px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-sidebar-header h3 {
+            color: #0d4d8c;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .admin-sidebar-header p {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .admin-sidebar-menu {
+            padding: 20px 0;
+            list-style: none;
+        }
+        
+        .admin-menu-item {
+            margin-bottom: 5px;
+        }
+        
+        .admin-menu-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 15px;
+            border-left: 4px solid transparent;
+        }
+        
+        .admin-menu-link:hover {
+            background-color: #f0f8ff;
+            color: #0d4d8c;
+            border-left-color: #0d4d8c;
+        }
+        
+        .admin-menu-link.active {
+            background-color: #e6f2ff;
+            color: #0d4d8c;
+            border-left-color: #0d4d8c;
+            font-weight: 500;
+        }
+        
+        .admin-menu-link i {
+            font-size: 18px;
+            width: 24px;
+        }
+        
+        .admin-menu-badge {
+            margin-left: auto;
+            background: #0d4d8c;
+            color: white;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .admin-menu-section {
+            padding: 20px 25px 10px;
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        /* Main Content */
+        .admin-main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 30px;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .admin-main-content.expanded {
+            margin-left: 0;
+        }
+        
+        /* Dashboard Content */
+        .admin-welcome-banner {
+            background: linear-gradient(135deg, #0d4d8c, #1a6fc4);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+        }
+        
+        .admin-welcome-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .admin-welcome-banner p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        .admin-welcome-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 25px;
+            position: relative;
+        }
+        
+        .admin-welcome-stat {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .admin-welcome-stat i {
+            font-size: 24px;
+            opacity: 0.8;
+        }
+        
+        .admin-welcome-stat div h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .admin-welcome-stat div p {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+        }
+        
+        /* Stats Grid */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .admin-stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .admin-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
+        }
+        
+        .admin-stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .admin-stat-title {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .admin-stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(135deg, var(--card-color), var(--card-color-light));
+        }
+        
+        .admin-stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .admin-stat-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .admin-stat-change.positive {
+            color: #2e7d32;
+        }
+        
+        .admin-stat-change.negative {
+            color: #d32f2f;
+        }
+        
+        .admin-stat-change i {
+            font-size: 12px;
+        }
+        
+        /* Charts Section */
+        .admin-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1200px) {
+            .admin-charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .admin-chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .admin-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .admin-chart-header h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .admin-chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .admin-chart-btn {
+            background: #f5f7fa;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .admin-chart-btn:hover {
+            background: #e6f2ff;
+            color: #0d4d8c;
+        }
+        
+        .admin-chart-btn.active {
+            background: #0d4d8c;
+            color: white;
+        }
+        
+        .admin-chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Recent Activity */
+        .admin-recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+        
+        .admin-activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .admin-activity-header h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .admin-activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .admin-activity-item {
+            display: flex;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .admin-activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .admin-activity-icon.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .admin-activity-icon.info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .admin-activity-icon.warning {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .admin-activity-icon.danger {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .admin-activity-content {
+            flex: 1;
+        }
+        
+        .admin-activity-content h4 {
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .admin-activity-content p {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .admin-activity-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        /* Quick Actions */
+        .admin-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .admin-action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .admin-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .admin-action-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: white;
+            background: linear-gradient(135deg, #0d4d8c, #1a6fc4);
+        }
+        
+        .admin-action-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .admin-action-card p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        /* Admin Footer */
+        .admin-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            background: white;
+            margin-top: 30px;
+            border-radius: 15px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .admin-sidebar {
+                transform: translateX(-280px);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-main-content {
+                margin-left: 0;
+            }
+            
+            .admin-main-content.expanded {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-top-nav {
+                padding: 0 20px;
+                height: 60px;
+            }
+            
+            .admin-main-content {
+                padding: 20px;
+                margin-top: 60px;
+            }
+            
+            .admin-welcome-banner {
+                padding: 20px;
+            }
+            
+            .admin-welcome-banner h2 {
+                font-size: 24px;
+            }
+            
+            .admin-welcome-stats {
+                flex-wrap: wrap;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-chart-card {
+                padding: 20px;
+            }
+            
+            .admin-chart-container {
+                height: 250px;
+            }
+            
+            .admin-quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .admin-nav-right {
+                gap: 15px;
+            }
+            
+            .admin-user-info {
+                display: none;
+            }
+            
+            .admin-welcome-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .admin-chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .admin-chart-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .admin-chart-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="admin-top-nav">
+        <div class="admin-nav-container">
+            <div class="admin-nav-left">
+                <button class="admin-menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="admin-logo">
+                    <i class="fas fa-hospital-alt"></i>
+                    <h1>MediCare Admin <span id="adminRoleBadge">Super Admin</span></h1>
+                </div>
+            </div>
+            
+            <div class="admin-nav-right">
+                <div class="admin-nav-item">
+                    <i class="fas fa-bell admin-nav-icon"></i>
+                    <span class="admin-notification-badge">5</span>
+                </div>
+                <div class="admin-nav-item">
+                    <i class="fas fa-envelope admin-nav-icon"></i>
+                    <span class="admin-notification-badge">3</span>
+                </div>
+                <div class="admin-nav-item">
+                    <i class="fas fa-cog admin-nav-icon"></i>
+                </div>
+                <div class="admin-user-profile" id="userProfileDropdown">
+                    <div class="admin-user-avatar" id="userAvatar">SA</div>
+                    <div class="admin-user-info">
+                        <div class="admin-user-name" id="userName">System Administrator</div>
+                        <div class="admin-user-role" id="userRole">Super Admin</div>
+                    </div>
+                    <i class="fas fa-chevron-down" style="font-size: 14px; color: #666;"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-header">
+            <h3>Administration Panel</h3>
+            <p>System Overview & Controls</p>
+        </div>
+        
+        <ul class="admin-sidebar-menu">
+            <div class="admin-menu-section">Dashboard</div>
+            <li class="admin-menu-item">
+                <a href="admin-dashboard.html" class="admin-menu-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                    <span class="admin-menu-badge">Live</span>
+                </a>
+            </li>
+            
+            <div class="admin-menu-section">Management</div>
+            <li class="admin-menu-item">
+                <a href="admin-patients.html" class="admin-menu-link">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                    <span class="admin-menu-badge">1.2K</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="admin-doctors.html" class="admin-menu-link">
+                    <i class="fas fa-user-md"></i>
+                    <span>Doctors</span>
+                    <span class="admin-menu-badge">48</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="admin-appointments.html" class="admin-menu-link">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Appointments</span>
+                    <span class="admin-menu-badge">86</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="admin-records.html" class="admin-menu-link">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Medical Records</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="admin-billing.html" class="admin-menu-link">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Billing</span>
+                    <span class="admin-menu-badge">$45K</span>
+                </a>
+            </li>
+            
+            <div class="admin-menu-section">Analytics</div>
+            <li class="admin-menu-item">
+                <a href="admin-reports.html" class="admin-menu-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#" class="admin-menu-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#" class="admin-menu-link">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Statistics</span>
+                </a>
+            </li>
+            
+            <div class="admin-menu-section">System</div>
+            <li class="admin-menu-item">
+                <a href="admin-settings.html" class="admin-menu-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#" class="admin-menu-link">
+                    <i class="fas fa-user-shield"></i>
+                    <span>User Management</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#" class="admin-menu-link">
+                    <i class="fas fa-database"></i>
+                    <span>Backup & Restore</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#" class="admin-menu-link">
+                    <i class="fas fa-history"></i>
+                    <span>Audit Logs</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-main-content" id="adminMainContent">
+        <!-- Welcome Banner -->
+        <div class="admin-welcome-banner">
+            <h2>Welcome back, <span id="adminUserName">System Administrator</span>!</h2>
+            <p>Here's what's happening with your hospital management system today. Monitor key metrics, manage operations, and stay updated with recent activities.</p>
+            
+            <div class="admin-welcome-stats">
+                <div class="admin-welcome-stat">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h3>08:45 AM</h3>
+                        <p>Current Time</p>
+                    </div>
+                </div>
+                <div class="admin-welcome-stat">
+                    <i class="fas fa-calendar-day"></i>
+                    <div>
+                        <h3 id="currentDate">January 17, 2024</h3>
+                        <p>Today's Date</p>
+                    </div>
+                </div>
+                <div class="admin-welcome-stat">
+                    <i class="fas fa-hospital-user"></i>
+                    <div>
+                        <h3>42</h3>
+                        <p>Patients Today</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="admin-stats-grid">
+            <div class="admin-stat-card" style="--card-color: #0d4d8c; --card-color-light: #1a6fc4;">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Total Patients</div>
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="admin-stat-value">1,248</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12.5% increase</span>
+                </div>
+            </div>
+            
+            <div class="admin-stat-card" style="--card-color: #2e7d32; --card-color-light: #4caf50;">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Appointments Today</div>
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                </div>
+                <div class="admin-stat-value">86</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>8.2% increase</span>
+                </div>
+            </div>
+            
+            <div class="admin-stat-card" style="--card-color: #ef6c00; --card-color-light: #ff9800;">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Pending Approvals</div>
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="admin-stat-value">23</div>
+                <div class="admin-stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>3.4% decrease</span>
+                </div>
+            </div>
+            
+            <div class="admin-stat-card" style="--card-color: #d32f2f; --card-color-light: #f44336;">
+                <div class="admin-stat-header">
+                    <div class="admin-stat-title">Revenue Today</div>
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="admin-stat-value">$45,280</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>15.3% increase</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="admin-charts-grid">
+            <div class="admin-chart-card">
+                <div class="admin-chart-header">
+                    <h3>Patient Registration Trend</h3>
+                    <div class="admin-chart-actions">
+                        <button class="admin-chart-btn active">Monthly</button>
+                        <button class="admin-chart-btn">Quarterly</button>
+                        <button class="admin-chart-btn">Yearly</button>
+                    </div>
+                </div>
+                <div class="admin-chart-container">
+                    <canvas id="patientsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="admin-chart-card">
+                <div class="admin-chart-header">
+                    <h3>Appointment Statistics</h3>
+                    <div class="admin-chart-actions">
+                        <button class="admin-chart-btn active">By Department</button>
+                        <button class="admin-chart-btn">By Status</button>
+                        <button class="admin-chart-btn">By Doctor</button>
+                    </div>
+                </div>
+                <div class="admin-chart-container">
+                    <canvas id="appointmentsChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="admin-recent-activity">
+            <div class="admin-activity-header">
+                <h3>Recent System Activity</h3>
+                <button class="admin-chart-btn">View All</button>
+            </div>
+            <div class="admin-activity-list" id="activityList">
+                <!-- Activity items will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="admin-quick-actions">
+            <a href="admin-patients.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h4>Add New Patient</h4>
+                <p>Register a new patient in the system</p>
+            </a>
+            
+            <a href="admin-appointments.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-calendar-plus"></i>
+                </div>
+                <h4>Schedule Appointment</h4>
+                <p>Book a new appointment for a patient</p>
+            </a>
+            
+            <a href="admin-doctors.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h4>Manage Doctors</h4>
+                <p>View and manage doctor schedules</p>
+            </a>
+            
+            <a href="admin-billing.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <h4>Process Billing</h4>
+                <p>Handle billing and insurance claims</p>
+            </a>
+            
+            <a href="admin-reports.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Generate Reports</h4>
+                <p>Create analytical reports and insights</p>
+            </a>
+            
+            <a href="admin-settings.html" class="admin-action-card">
+                <div class="admin-action-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h4>System Settings</h4>
+                <p>Configure system preferences</p>
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <div class="admin-footer">
+            <p>MediCare Outpatient Admin Portal • v2.4.1 • Last Updated: January 17, 2024</p>
+            <p>© 2024 MediCare Healthcare Systems. All rights reserved. Unauthorized access is prohibited.</p>
+        </div>
+    </main>
+
+    <!-- User Dropdown Menu (Hidden) -->
+    <div class="admin-dropdown-menu" id="userDropdownMenu" style="display: none;">
+        <div class="dropdown-item">
+            <i class="fas fa-user"></i>
+            <span>My Profile</span>
+        </div>
+        <div class="dropdown-item">
+            <i class="fas fa-cog"></i>
+            <span>Account Settings</span>
+        </div>
+        <div class="dropdown-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Security</span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check admin authentication
+            const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
+            
+            if (!isAdminLoggedIn || isAdminLoggedIn !== 'true' || !adminUser.id) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Update UI with admin info
+            document.getElementById('adminUserName').textContent = adminUser.name;
+            document.getElementById('userName').textContent = adminUser.name;
+            document.getElementById('userRole').textContent = adminUser.role.charAt(0).toUpperCase() + adminUser.role.slice(1);
+            document.getElementById('adminRoleBadge').textContent = adminUser.role.charAt(0).toUpperCase() + adminUser.role.slice(1);
+            
+            // Set user avatar initials
+            const userName = adminUser.name;
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('userAvatar').textContent = initials.substring(0, 2);
+            
+            // Set current date
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Menu toggle functionality
+            const menuToggle = document.getElementById('menuToggle');
+            const adminSidebar = document.getElementById('adminSidebar');
+            const adminMainContent = document.getElementById('adminMainContent');
+            
+            menuToggle.addEventListener('click', function() {
+                adminSidebar.classList.toggle('collapsed');
+                adminMainContent.classList.toggle('expanded');
+            });
+            
+            // User dropdown functionality
+            const userProfileDropdown = document.getElementById('userProfileDropdown');
+            const userDropdownMenu = document.getElementById('userDropdownMenu');
+            
+            userProfileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdownMenu.style.display = userDropdownMenu.style.display === 'block' ? 'none' : 'block';
+                
+                // Position the dropdown
+                const rect = userProfileDropdown.getBoundingClientRect();
+                userDropdownMenu.style.position = 'fixed';
+                userDropdownMenu.style.top = (rect.bottom + 10) + 'px';
+                userDropdownMenu.style.right = (window.innerWidth - rect.right) + 'px';
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                userDropdownMenu.style.display = 'none';
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('isAdminLoggedIn');
+                    localStorage.removeItem('adminUser');
+                    localStorage.removeItem('adminRole');
+                    window.location.href = 'admin-login.html';
+                }
+            });
+            
+            // Initialize Charts
+            initializeCharts();
+            
+            // Load recent activity
+            loadRecentActivity();
+            
+            // Update sidebar active state
+            updateSidebarActiveState();
+            
+            // Check permissions based on role
+            checkAdminPermissions(adminUser.role);
+        });
+        
+        function initializeCharts() {
+            // Patients Chart
+            const patientsCtx = document.getElementById('patientsChart').getContext('2d');
+            new Chart(patientsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'New Patients',
+                        data: [85, 92, 78, 95, 112, 108, 125, 118, 132, 145, 158, 170],
+                        borderColor: '#0d4d8c',
+                        backgroundColor: 'rgba(13, 77, 140, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Appointments Chart
+            const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
+            new Chart(appointmentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cardiology', 'Orthopedics', 'Pediatrics', 'Dermatology', 'Neurology', 'Oncology', 'General'],
+                    datasets: [{
+                        label: 'Appointments',
+                        data: [45, 38, 52, 28, 35, 42, 60],
+                        backgroundColor: [
+                            'rgba(13, 77, 140, 0.8)',
+                            'rgba(46, 125, 50, 0.8)',
+                            'rgba(239, 108, 0, 0.8)',
+                            'rgba(156, 39, 176, 0.8)',
+                            'rgba(0, 150, 136, 0.8)',
+                            'rgba(244, 67, 54, 0.8)',
+                            'rgba(96, 125, 139, 0.8)'
+                        ],
+                        borderColor: [
+                            '#0d4d8c',
+                            '#2e7d32',
+                            '#ef6c00',
+                            '#9c27b0',
+                            '#009688',
+                            '#f44336',
+                            '#607d8b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Chart period toggle
+            document.querySelectorAll('.admin-chart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.admin-chart-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        function loadRecentActivity() {
+            const activities = [
+                {
+                    id: 1,
+                    type: 'success',
+                    icon: 'fas fa-user-plus',
+                    title: 'New Patient Registered',
+                    description: 'John Doe registered in the system',
+                    time: '10 minutes ago'
+                },
+                {
+                    id: 2,
+                    type: 'info',
+                    icon: 'fas fa-calendar-check',
+                    title: 'Appointment Scheduled',
+                    description: 'Follow-up appointment with Dr. Smith',
+                    time: '25 minutes ago'
+                },
+                {
+                    id: 3,
+                    type: 'warning',
+                    icon: 'fas fa-exclamation-triangle',
+                    title: 'Payment Overdue',
+                    description: 'Invoice #INV-2024-005 is overdue',
+                    time: '1 hour ago'
+                },
+                {
+                    id: 4,
+                    type: 'danger',
+                    icon: 'fas fa-times-circle',
+                    title: 'Appointment Cancelled',
+                    description: 'Patient cancelled appointment #APT-789',
+                    time: '2 hours ago'
+                },
+                {
+                    id: 5,
+                    type: 'success',
+                    icon: 'fas fa-file-medical',
+                    title: 'Medical Record Updated',
+                    description: 'Lab results uploaded for patient ID: 12345',
+                    time: '3 hours ago'
+                }
+            ];
+            
+            const activityList = document.getElementById('activityList');
+            activityList.innerHTML = activities.map(activity => `
+                <div class="admin-activity-item">
+                    <div class="admin-activity-icon ${activity.type}">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="admin-activity-content">
+                        <h4>${activity.title}</h4>
+                        <p>${activity.description}</p>
+                        <div class="admin-activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateSidebarActiveState() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuLinks = document.querySelectorAll('.admin-menu-link');
+            
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        function checkAdminPermissions(role) {
+            const permissions = {
+                'super-admin': {
+                    canManageUsers: true,
+                    canAccessSettings: true,
+                    canViewReports: true,
+                    canManageBilling: true
+                },
+                'admin': {
+                    canManageUsers: false,
+                    canAccessSettings: false,
+                    canViewReports: true,
+                    canManageBilling: true
+                },
+                'doctor': {
+                    canManageUsers: false,
+                    canAccessSettings: false,
+                    canViewReports: true,
+                    canManageBilling: false
+                },
+                'staff': {
+                    canManageUsers: false,
+                    canAccessSettings: false,
+                    canViewReports: false,
+                    canManageBilling: true
+                }
+            };
+            
+            const userPermissions = permissions[role] || permissions['staff'];
+            
+            // Hide/show elements based on permissions
+            if (!userPermissions.canManageUsers) {
+                document.querySelectorAll('.admin-menu-link[href="#"]').forEach(link => {
+                    if (link.querySelector('i.fa-user-shield')) {
+                        link.parentElement.style.display = 'none';
+                    }
+                });
+            }
+            
+            if (!userPermissions.canAccessSettings) {
+                const settingsLink = document.querySelector('.admin-menu-link[href="admin-settings.html"]');
+                if (settingsLink) {
+                    settingsLink.parentElement.style.display = 'none';
+                }
+            }
+            
+            if (!userPermissions.canViewReports) {
+                const reportsLink = document.querySelector('.admin-menu-link[href="admin-reports.html"]');
+                if (reportsLink) {
+                    reportsLink.parentElement.style.display = 'none';
+                }
+                document.querySelectorAll('.admin-menu-section').forEach(section => {
+                    if (section.textContent === 'Analytics') {
+                        section.style.display = 'none';
+                    }
+                });
+            }
+            
+            if (!userPermissions.canManageBilling) {
+                const billingLink = document.querySelector('.admin-menu-link[href="admin-billing.html"]');
+                if (billingLink) {
+                    billingLink.parentElement.style.display = 'none';
+                }
+            }
+        }
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            // Update notification badges with random numbers
+            const notificationBadges = document.querySelectorAll('.admin-notification-badge');
+            notificationBadges.forEach(badge => {
+                const current = parseInt(badge.textContent) || 0;
+                const change = Math.random() > 0.5 ? 1 : -1;
+                const newValue = Math.max(0, current + change);
+                badge.textContent = newValue;
+            });
+            
+            // Update some stats
+            const statValues = document.querySelectorAll('.admin-stat-value');
+            if (statValues.length > 0) {
+                const patientsStat = statValues[0];
+                const currentPatients = parseInt(patientsStat.textContent.replace(',', '')) || 1248;
+                const newPatients = currentPatients + (Math.random() > 0.7 ? 1 : 0);
+                patientsStat.textContent = newPatients.toLocaleString();
+            }
+        }, 30000); // Update every 30 seconds
+    </script>
+    
+    <style>
+        /* Dropdown Menu Styles */
+        .admin-dropdown-menu {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 250px;
+            z-index: 1001;
+            border: 1px solid #eee;
+        }
+        
+        .dropdown-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            color: #666;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 5px 0;
+        }
+        
+        /* Chart Tooltip */
+        .chart-tooltip {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</body>
+</html>
